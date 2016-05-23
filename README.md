@@ -1,4 +1,4 @@
-# wse-plugin-onconnectauthenticate
+# OnConnect Authentication
 OnConnectAuthenticate is a module for [Wowza Streaming Engine™ media server software](https://www.wowza.com/products/streaming-engine) that allows for file-based authentication for flash applications.
 
 ## Prerequisites
@@ -21,7 +21,7 @@ This module allows you to:
 
 Wowza Media Systems™ provides developers with a platform to create streaming applications and solutions. See [Wowza Developer Tools](https://www.wowza.com/resources/developers) to learn more about our APIs and SDK.
 
-To use the compiled version of this module, see [How to do file-based authentication with RTMP client with credentials passed as parameters of NetConnection connect (ModuleOnConnectAuthenticate)](https://www.wowza.com/forums/content.php?160-How-to-do-file-based-authentication-with-RTMP-client-with-credentials-passed-as-parameters-of-NetConnection-connect-(ModuleOnConnectAuthenticate))).
+To use the compiled version of this module, see [How to do file-based authentication with RTMP client with credentials passed as parameters of NetConnection connect (ModuleOnConnectAuthenticate)](https://www.wowza.com/forums/content.php?160-How-to-do-file-based-authentication-with-RTMP-client-with-credentials-passed-as-parameters-of-NetConnection-connect-(ModuleOnConnectAuthenticate))) or [How to do file-based authentication with RTMP client and credentials in querystring of the RTMP URL (ModuleOnConnectAuthenticate2)](https://www.wowza.com/forums/content.php?234-How-to-do-file-based-authentication-with-RTMP-client-and-credentials-in-querystring-of-the-RTMP-URL-(ModuleOnConnectAuthenticate2))).
 
 ## Contact
 
