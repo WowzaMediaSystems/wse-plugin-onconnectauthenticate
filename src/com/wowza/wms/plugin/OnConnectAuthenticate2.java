@@ -4,22 +4,20 @@
  */
 package com.wowza.wms.plugin;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
 
-import com.wowza.util.*;
-import com.wowza.wms.amf.*;
-import com.wowza.wms.application.*;
-import com.wowza.wms.authentication.*;
-import com.wowza.wms.authentication.file.*;
-import com.wowza.wms.client.*;
-import com.wowza.wms.module.*;
-import com.wowza.wms.request.*;
-import com.wowza.wms.util.*;
-import com.wowza.wms.vhost.*;
+import com.wowza.wms.amf.AMFDataList;
+import com.wowza.wms.application.IApplicationInstance;
+import com.wowza.wms.application.WMSProperties;
+import com.wowza.wms.authentication.IAuthenticateUsernamePasswordProvider;
+import com.wowza.wms.authentication.file.AuthenticationPasswordFiles;
+import com.wowza.wms.client.IClient;
+import com.wowza.wms.module.ModuleBase;
+import com.wowza.wms.request.RequestFunction;
+import com.wowza.wms.util.AuthenticationUtils;
 
 public class OnConnectAuthenticate2 extends ModuleBase
-{ 
+{
 	public static final String AUTHPASSWORDFILEPATH = "${com.wowza.wms.context.VHostConfigHome}/conf/connect.password";
 	private File passwordFile = null;
 	private String usernamePasswordProviderClass = null;
@@ -27,56 +25,48 @@ public class OnConnectAuthenticate2 extends ModuleBase
 	public void onAppStart(IApplicationInstance appInstance)
 	{
 		WMSProperties props = appInstance.getProperties();
-				
+
 		String passwordFileStr = props.getPropertyStr("rtmpAuthenticateFile", AUTHPASSWORDFILEPATH);
-		this.usernamePasswordProviderClass = props.getPropertyStr("usernamePasswordProviderClass", this.usernamePasswordProviderClass);
+		usernamePasswordProviderClass = props.getPropertyStr("usernamePasswordProviderClass", usernamePasswordProviderClass);
 		if (passwordFileStr != null)
 		{
-			Map<String, String> envMap = new HashMap<String, String>();
-			
-			IVHost vhost = appInstance.getVHost();
-			envMap.put("com.wowza.wms.context.VHost", vhost.getName());
-			envMap.put("com.wowza.wms.context.VHostConfigHome", vhost.getHomePath());
-			envMap.put("com.wowza.wms.context.Application", appInstance.getApplication().getName());
-			envMap.put("com.wowza.wms.context.ApplicationInstance", appInstance.getName());
-
-			passwordFileStr = SystemUtils.expandEnvironmentVariables(passwordFileStr, envMap);
+			passwordFileStr = appInstance.decodeStorageDir(passwordFileStr);
 			passwordFile = new File(passwordFileStr);
 		}
-		
+
 		if (passwordFile != null)
-			getLogger().info("ModuleOnConnectAuthenticate: Authorization password file: "+passwordFile.getAbsolutePath());
+			getLogger().info("ModuleOnConnectAuthenticate: Authorization password file: " + passwordFile.getAbsolutePath());
 		if (usernamePasswordProviderClass != null)
-			getLogger().info("ModuleOnConnectAuthenticate: Authorization password class: "+usernamePasswordProviderClass);
+			getLogger().info("ModuleOnConnectAuthenticate: Authorization password class: " + usernamePasswordProviderClass);
 	}
 
-public void onConnect(IClient client, RequestFunction function, AMFDataList params)
-{
-	boolean isAuthenticated = false;
-	
-	String username = null;
-	String password = null;
-	
-	try
+	public void onConnect(IClient client, RequestFunction function, AMFDataList params)
 	{
-		while(true)
+		boolean isAuthenticated = false;
+
+		String username = null;
+		String password = null;
+
+		try
 		{
-			getLogger().info("size: " + params.size());
-			
-			String[] auth = client.getQueryStr().split("&");
-			
-			username = auth[0];
-			password = auth[1];
-				
+			while (true)
+			{
+				getLogger().info("size: " + params.size());
+
+				String[] auth = client.getQueryStr().split("&");
+
+				username = auth[0];
+				password = auth[1];
+
 				if (username == null || password == null)
 					break;
-								
+
 				IAuthenticateUsernamePasswordProvider filePtr = null;
 				if (usernamePasswordProviderClass != null)
 					filePtr = AuthenticationUtils.createUsernamePasswordProvider(usernamePasswordProviderClass);
 				else if (passwordFile != null)
 					filePtr = AuthenticationPasswordFiles.getInstance().getPasswordFile(passwordFile);
-				
+
 				if (filePtr == null)
 					break;
 
@@ -88,19 +78,19 @@ public void onConnect(IClient client, RequestFunction function, AMFDataList para
 
 				if (!userPassword.equals(password))
 					break;
-				
+
 				isAuthenticated = true;
 				break;
 			}
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
-			getLogger().error("ModuleOnConnectAuthenticate.onConnect: "+e.toString());
+			getLogger().error("ModuleOnConnectAuthenticate.onConnect: " + e.toString());
 			isAuthenticated = false;
 		}
-		
+
 		if (!isAuthenticated)
-			client.rejectConnection("Authentication Failed["+client.getClientId()+"]: "+username);
+			client.rejectConnection("Authentication Failed[" + client.getClientId() + "]: " + username);
 		else
 			client.acceptConnection();
 	}
