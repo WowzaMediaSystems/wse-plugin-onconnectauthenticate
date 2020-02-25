@@ -1,6 +1,8 @@
 # OnConnectAuthenticate
 The **OnConnectAuthenticate** modules for [Wowza Streaming Engine™ media server software](https://www.wowza.com/products/streaming-engine) add file-based authentication for Flash applications. OnConnectAuthenticate uses NetConnection.connect parameters for authentication while OnConnectAuthenticate2 uses query parameters in the RTMP URL.
 
+This repo includes a [compiled version](/lib/wse-plugin-onconnectauthenticate.jar).
+
 ## Prerequisites
 Wowza Streaming Engine 4.0.0 or later is required.
 
