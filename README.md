@@ -11,7 +11,7 @@ These modules allows you to:
 
 * Define a specific authentication file path.
 * Create a custom user authentication provider class.
-* Provide a whitelist of encoders.
+* Provide a allowlist of encoders.
 
 ## More resources
 To use the compiled versions of the OnConnectAuthenticate modules, see [Do file-based RTMP authentication with NetConnection connect using a Wowza Streaming Engine Java module](https://www.wowza.com/docs/how-to-do-file-based-rtmp-authentication-with-netconnection-connect-onconnectauthenticate) or [Do file-based RTMP authentication with URL query strings using a Wowza Streaming Engine Java module](https://www.wowza.com/docs/how-to-do-file-based-rtmp-authentication-with-url-query-strings-onconnectauthenticate2).
@@ -26,4 +26,4 @@ Wowza Media Systems™ provides developers with a platform to create streaming a
 [Wowza Media Systems, LLC](https://www.wowza.com/contact)
 
 ## License
-This code is distributed under the [Wowza Public License](https://github.com/WowzaMediaSystems/wse-plugin-onconnectauthenticate/blob/master/LICENSE.txt).
+This code is distributed under the [Wowza Public License](/LICENSE.txt).
